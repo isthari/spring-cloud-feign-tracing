@@ -1,0 +1,2 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+com.isthari.spring.cloud.feign.tracing.WebHandlerInterceptorFactory
