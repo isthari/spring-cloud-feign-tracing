@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>org.test</groupId>
+	<artifactId>spring-feign</artifactId>
+	<version>1.0-SNAPSHOT</version>
+
+
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>1.2.0.RELEASE</version>
+		<relativePath />
+		<!-- lookup parent from repository -->
+	</parent>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>			
+		<java.version>1.7</java.version>
+	</properties>
+
+	<profiles>
+		<profile>
+			<id>client</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<properties>			
+				<start-class>com.isthari.test.application.Application</start-class>
+				<server.port>5000</server.port>
+			</properties>
+		</profile>
+	
+		<profile>
+			<id>service2</id>			
+			<properties>			
+				<start-class>com.isthari.test.service2.Service2</start-class>
+				<server.port>6000</server.port>
+			</properties>
+		</profile>
+		
+		<profile>
+			<id>eurekaServer</id>			
+			<properties>			
+				<start-class>com.isthari.test.eureka.EurekaServer</start-class>
+				<server.port>8761</server.port>
+			</properties>
+		</profile>
+		<profile>
+			<id>eurekaClient</id>			
+			<properties>			
+				<start-class>com.isthari.test.eurekaclient.EurekaClient</start-class>
+				<server.port>7002</server.port>
+			</properties>
+		</profile>
+	</profiles>
+
+
+	<dependencies>		
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+			<version>1.2.0.RELEASE</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-thymeleaf</artifactId>
+
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<version>1.2.0.RELEASE</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter</artifactId>
+			<version>1.0.3.RELEASE</version>
+		</dependency>
+		
+		
+		<!-- EUREKA -->
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-eureka-server</artifactId>
+			<version>1.0.3.RELEASE</version>
+			<exclusions>
+				<exclusion>
+					<groupId>javax.servlet</groupId>
+					<artifactId>servlet-api</artifactId>
+				</exclusion>
+			</exclusions>			
+		</dependency>		
+<!--
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-eureka</artifactId>
+			<version>1.0.3.RELEASE</version>			
+		</dependency>
+-->
+<!-- 		<dependency> -->
+<!-- 			<groupId>com.netflix.eureka</groupId> -->
+<!-- 			<artifactId>eureka-core</artifactId>		 -->
+<!-- 			<version>1.1.159</version>			 -->
+<!-- 		</dependency> -->
+		
+
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-hystrix</artifactId>
+			<version>1.0.3.RELEASE</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-feign</artifactId>
+			<version>1.0.3.RELEASE</version>
+		</dependency>
+
+
+		<dependency>
+			<groupId>com.netflix.feign</groupId>
+			<artifactId>feign-core</artifactId>
+			<version>8.5.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.netflix.feign</groupId>
+			<artifactId>feign-slf4j</artifactId>
+			<version>8.5.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.netflix.feign</groupId>
+			<artifactId>feign-gson</artifactId>
+			<version>8.5.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.netflix.archaius</groupId>
+			<artifactId>archaius-core</artifactId>
+			<version>0.6.3</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+			<version>18.0</version>
+		</dependency>
+
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+                                        <requiresUnpack>
+                                                <dependency>
+                                                        <groupId>com.netflix.eureka</groupId>
+                                                        <artifactId>eureka-core</artifactId>
+                                                </dependency>
+                                                <dependency>
+                                                        <groupId>com.netflix.eureka</groupId>
+                                                        <artifactId>eureka-client</artifactId>
+                                                </dependency>
+                                        </requiresUnpack>
+                                </configuration>
+
+			</plugin>
+
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>properties-maven-plugin</artifactId>
+				<version>1.0-alpha-2</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>set-system-properties</goal>
+						</goals>
+						<configuration>
+							<properties>
+								<property>
+									<name>server.port</name>
+									<value>${server.port}</value>
+								</property>								
+							</properties>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+
+
+</project>
