@@ -5,5 +5,6 @@ import java.util.concurrent.Future;
 
 
 public interface TracingHandler {
-	public Future<Void> insertTrace();
+	
+	public Future<Void> insertTrace(TracingRequest tracingRequest);
 }

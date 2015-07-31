@@ -1,5 +1,7 @@
 package com.isthari.spring.cloud.feign.tracing;
 
+import java.net.InetAddress;
+import java.util.Date;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -31,6 +33,7 @@ public class WebHandlerInterceptor  implements HandlerInterceptor  {
 	private TracingHandler tracingHandler;
 	
 	private UUID uuid;
+	private Date date;
 	private long nanoseconds;
 	private String hop;
 	private AtomicLong nextHop=new AtomicLong(0L);
@@ -61,6 +64,7 @@ public class WebHandlerInterceptor  implements HandlerInterceptor  {
 			this.uuid = UUID.fromString(uuid);
 		}
 		
+		this.date = new Date();
 		this.nanoseconds = System.nanoTime();
 		if (hop==null){
 			this.hop="1";
@@ -84,18 +88,32 @@ public class WebHandlerInterceptor  implements HandlerInterceptor  {
 			HttpServletResponse response, Object handler,
 			ModelAndView modelAndView) throws Exception {
 		
-		logger.debug("post handle ");
-		
+		logger.debug("post handle ");				
 	}
 
 	@Override
 	public void afterCompletion(HttpServletRequest request,
 			HttpServletResponse response, Object handler, Exception ex)
 			throws Exception {
+		int latency = (int) this.getLatency();
+		
 		// colocar en una cola para insertarlo en cassandra
-		logger.debug("after completion "+getUuid()+" hop: "+hop+" time: "+getLatency());
-		tracingHandler.insertTrace();
-		logger.debug("fin");
+		logger.debug("after completion "+getUuid()+" hop: "+hop+" time: "+getLatency());				
+		
+		TracingRequest tracingRequest = new TracingRequest();
+		tracingRequest.setEurekaClient(applicationName);
+		tracingRequest.setHop(this.hop);
+		tracingRequest.setLatency(latency);
+		// TODO cambiarlo por el path real en la url
+		tracingRequest.setPath(request.getServletPath());
+		tracingRequest.setRequest(this.uuid);
+		tracingRequest.setServer(InetAddress.getLocalHost().getHostName());
+		tracingRequest.setTimestamp(date);
+		tracingRequest.setStatus(response.getStatus());
+		
+		tracingHandler.insertTrace(tracingRequest);
+		
+		logger.debug("fin");		
 	}
 	
 	
