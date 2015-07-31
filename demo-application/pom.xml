@@ -39,7 +39,7 @@
 			<properties>
 				<start-class>com.isthari.demo.service1.Service1</start-class>
 				<server.port>8010</server.port>
-				<spring.application.name>service1</spring.application.name>
+				<spring.application.name>Service1</spring.application.name>
 			</properties>
 		</profile>
 		
@@ -75,7 +75,7 @@
 	<dependencies>		
 		<dependency>
 			<groupId>com.isthari.spring.cloud.feign</groupId>
-			<artifactId>tracing-core</artifactId>
+			<artifactId>tracing-cassandra</artifactId>
 			<version>1.0-SNAPSHOT</version>
 		</dependency>
 		
