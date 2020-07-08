@@ -79,7 +79,6 @@ public class WebHandlerInterceptor  implements HandlerInterceptor  {
 	}
 	
 	public String getNextHop(){
-		// TODO analizar propiedades de atomiclong
 		return this.hop+"-"+this.nextHop.incrementAndGet();
 	}
 
@@ -104,7 +103,6 @@ public class WebHandlerInterceptor  implements HandlerInterceptor  {
 		tracingRequest.setEurekaClient(applicationName);
 		tracingRequest.setHop(this.hop);
 		tracingRequest.setLatency(latency);
-		// TODO cambiarlo por el path real en la url
 		tracingRequest.setPath(request.getServletPath());
 		tracingRequest.setRequest(this.uuid);
 		tracingRequest.setServer(InetAddress.getLocalHost().getHostName());
